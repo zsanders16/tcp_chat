@@ -2,7 +2,7 @@
 
 In an effort to understand how to send data from a one process to another over a plain TCP/IP connection I created a Chat Server and Client. This is a basic server client connection, passing both text and messages back and forth.  There is no persistance of messages and clients only get messages when they are connected.
 
-<strong>This was more a learning exercise than about producing a working product.</strong>
+<em><strong>This was more a learning exercise than about producing a working product.</strong></em>
 
 ### To Run
 1. cd into server folder and run main.go
