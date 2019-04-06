@@ -5,8 +5,9 @@ import (
 	"encoding/gob"
 	"fmt"
 	"log"
-	"tcp_chat/server/tcpServer"
-	"tcp_chat/types"
+
+	"github.com/zsanders16/tcp_chat/server/tcpServer"
+	"github.com/zsanders16/tcp_chat/types"
 )
 
 func main() {
