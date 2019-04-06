@@ -10,5 +10,5 @@ In an effort to understand how to send data from a one process to another over a
 3. Open as many clients a you want.
 
 #### TO DO:
-- Deregister client connections
+- Deregister client connections when they leave
 - Improve UI
