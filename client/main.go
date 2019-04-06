@@ -7,8 +7,9 @@ import (
 	"log"
 	"os"
 	"strings"
-	"tcp_chat/client/tcpClient"
-	"tcp_chat/types"
+
+	"github.com/zsanders16/tcp_chat/client/tcpClient"
+	"github.com/zsanders16/tcp_chat/types"
 )
 
 func main() {

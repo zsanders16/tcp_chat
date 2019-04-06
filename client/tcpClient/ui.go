@@ -5,9 +5,9 @@ import (
 	"encoding/gob"
 	"fmt"
 	"log"
-	"tcp_chat/types"
 
 	"github.com/marcusolsson/tui-go"
+	"github.com/zsanders16/tcp_chat/types"
 )
 
 func NewUI(name string, rw *bufio.ReadWriter, ep EntryPoint) *UI {

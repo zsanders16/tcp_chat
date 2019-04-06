@@ -5,7 +5,8 @@ import (
 	"encoding/gob"
 	"log"
 	"net"
-	"tcp_chat/types"
+
+	"github.com/zsanders16/tcp_chat/types"
 )
 
 const Port = ":3333"
