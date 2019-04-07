@@ -50,13 +50,17 @@ func (e *Endpoint) Listen() {
 			log.Println("Unable to Accept connection request: ", err)
 			continue
 		}
-		go e.HandleMessage(conn)
+		user := &User{
+			Connection: conn,
+		}
+		go e.HandleMessage(user)
 	}
 }
 
-func (e *Endpoint) HandleMessage(conn net.Conn) {
-	rw := bufio.NewReadWriter(bufio.NewReader(conn), bufio.NewWriter(conn))
-	defer conn.Close()
+func (e *Endpoint) HandleMessage(user *User) {
+	rw := bufio.NewReadWriter(bufio.NewReader(user.Connection), bufio.NewWriter(user.Connection))
+	// defer conn.Close()
+	defer e.DeregisterUser(user)
 	for {
 		cmd, err := rw.ReadString('\n')
 		if err != nil {
@@ -70,7 +74,7 @@ func (e *Endpoint) HandleMessage(conn net.Conn) {
 		cmd = strings.Trim(cmd, "\n ")
 
 		if cmd == "NAME" {
-			e.RegisterUser(rw, conn)
+			e.RegisterUser(rw, user)
 			continue
 		}
 
@@ -91,7 +95,7 @@ func (e *Endpoint) RegisterHandler(name string, f HandlerFunc) {
 	e.M.RUnlock()
 }
 
-func (e *Endpoint) RegisterUser(wr *bufio.ReadWriter, conn net.Conn) {
+func (e *Endpoint) RegisterUser(wr *bufio.ReadWriter, user *User) {
 
 	var nameCommand types.NameCommand
 	dec := gob.NewDecoder(wr)
@@ -99,18 +103,22 @@ func (e *Endpoint) RegisterUser(wr *bufio.ReadWriter, conn net.Conn) {
 		log.Println("Error decoding name", err.Error())
 	}
 	name := strings.Trim(nameCommand.Name, "\n")
-
-	user := &User{
-		Connection: conn,
-		Name:       name,
-	}
+	user.Name = name
 	e.M.RLock()
 	e.Users = append(e.Users, user)
 	e.M.RUnlock()
 }
 
-func (e *Endpoint) DeregisterUser() {
+func (e *Endpoint) DeregisterUser(u *User) {
+	e.M.Lock()
+	defer e.M.Unlock()
 
+	for i, user := range e.Users {
+		if u == user {
+			e.Users = append(e.Users[:i], e.Users[i+1:]...)
+		}
+	}
+	u.Connection.Close()
 }
 
 func (e *Endpoint) Broadcast(m types.MessageCommand) {
